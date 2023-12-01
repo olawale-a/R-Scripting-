@@ -1,0 +1,54 @@
+# Install and load necessary packages
+if (!requireNamespace("dplyr", quietly = TRUE)) {
+  install.packages("dplyr")
+}
+
+library(dplyr)
+
+# Load the dataset (replace 'your_dataset.csv' with the actual file path)
+dataset <- read.csv("your_dataset.csv")
+
+# Define compliance rules
+compliance_rules <- list(
+  rule_1 = list(
+    description = "Check for missing values",
+    check_function = function(data) any(is.na(data))
+  ),
+  rule_2 = list(
+    description = "Check for duplicates",
+    check_function = function(data) any(duplicated(data))
+  ),
+  # Add more rules as needed
+)
+
+# Function to assess data compliance based on rules
+assess_compliance <- function(data, rules) {
+  results <- list()
+  
+  for (rule_name in names(rules)) {
+    rule <- rules[[rule_name]]
+    check_result <- rule$check_function(data)
+    
+    results[[rule_name]] <- list(
+      description = rule$description,
+      compliant = !check_result,
+      details = ifelse(!check_result, "Compliant", "Non-compliant")
+    )
+  }
+  
+  return(results)
+}
+
+# Assess data compliance
+compliance_results <- assess_compliance(dataset, compliance_rules)
+
+# Display compliance report
+for (rule_name in names(compliance_results)) {
+  rule_result <- compliance_results[[rule_name]]
+  cat("Rule:", rule_name, "\n")
+  cat("Description:", rule_result$description, "\n")
+  cat("Compliance:", rule_result$details, "\n\n")
+}
+
+# This script uses the dplyr package for data manipulation and reporting.
+# Replace "your_dataset.csv" with the actual path to your dataset. 
