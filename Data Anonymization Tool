@@ -1,0 +1,25 @@
+# Install and load necessary packages
+if (!requireNamespace("dplyr", quietly = TRUE)) {
+  install.packages("dplyr")
+}
+
+library(dplyr)
+
+# Load the dataset (replace 'your_dataset.csv' with the actual file path)
+dataset <- read.csv("your_dataset.csv")
+
+# Anonymize the dataset
+anonymized_dataset <- dataset %>%
+  mutate(
+    # Replace personally identifiable information with anonymized values
+    first_name = paste0("User_", row_number()),
+    last_name = paste0("ID_", row_number()),
+    email = paste0("user", row_number(), "@example.com"),
+    phone_number = "N/A"  # Remove or replace as needed
+  )
+
+# Save the anonymized dataset to a new file
+write.csv(anonymized_dataset, "anonymized_dataset.csv", row.names = FALSE)
+
+# This script uses the dplyr package for data manipulation.
+# Replace "your_dataset.csv" with the actual path to your dataset.
