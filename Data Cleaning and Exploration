@@ -1,0 +1,35 @@
+# Install and load necessary packages
+if (!requireNamespace("tidyverse", quietly = TRUE)) {
+  install.packages("tidyverse")
+}
+
+library(tidyverse)
+
+# Load the dataset (replace 'your_dataset.csv' with the actual file path)
+dataset <- read.csv("your_dataset.csv")
+
+# Display a summary of the dataset
+summary(dataset)
+
+# Identify and handle missing values
+dataset <- dataset %>%
+  na.omit()  # Remove rows with missing values
+
+# Identify and handle outliers
+# You can use various methods, such as z-score or IQR, to detect and handle outliers
+# Below is an example using z-score
+outlier_threshold <- 2  # Adjust as needed
+dataset <- dataset %>%
+  filter_all(all_vars(abs((. - mean(.))/sd(.)) < outlier_threshold))
+
+# Explore data distribution through visualizations
+# You can customize the plots based on your dataset and variables
+ggplot(dataset, aes(x = variable_of_interest)) +
+  geom_histogram(binwidth = 5, fill = "blue", color = "black") +
+  labs(title = "Distribution of Variable of Interest", x = "Variable of Interest", y = "Frequency")
+
+# Save the cleaned dataset to a new file
+write.csv(dataset, "cleaned_dataset.csv", row.names = FALSE)
+
+# script uses the tidyverse package, which includes packages like dplyr and ggplot2 for data manipulation and visualization.
+# Replace "your_dataset.csv" with the actual path to your dataset.
